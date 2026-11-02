@@ -6,6 +6,7 @@ import { AthleteApp } from './apps/AthleteApp';
 import { GymApp } from './apps/GymApp';
 import { AdminApp } from './apps/AdminApp';
 import { AuthApp } from './apps/AuthApp';
+import { PWAInstallBanner } from './components/common/PWAInstallBanner';
 import { UserRole, SportTypeCode } from './types';
 
 export function App() {
@@ -28,52 +29,61 @@ export function App() {
 
   const detectedSubdomain = getSubdomain();
 
-  // If on a dedicated production subdomain, lock to that panel
-  if (detectedSubdomain === 'coach') {
-    return <CoachApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (detectedSubdomain === 'athlete') {
-    return <AthleteApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (detectedSubdomain === 'gym') {
-    return <GymApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (detectedSubdomain === 'admin') {
-    return <AdminApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (detectedSubdomain === 'auth') {
-    return (
-      <AuthApp
-        onSuccess={(role) => navigate(`/${role}`)}
-        onBackToLanding={() => navigate('/')}
-      />
-    );
-  }
+  const renderContent = () => {
+    // If on a dedicated production subdomain, lock to that panel
+    if (detectedSubdomain === 'coach') {
+      return <CoachApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (detectedSubdomain === 'athlete') {
+      return <AthleteApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (detectedSubdomain === 'gym') {
+      return <GymApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (detectedSubdomain === 'admin') {
+      return <AdminApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (detectedSubdomain === 'auth') {
+      return (
+        <AuthApp
+          onSuccess={(role) => navigate(`/${role}`)}
+          onBackToLanding={() => navigate('/')}
+        />
+      );
+    }
 
-  // Routing on primary domain (Landing, /coach, /athlete, /gym, /admin, /auth)
-  if (currentRoute.startsWith('/coach')) {
-    return <CoachApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (currentRoute.startsWith('/athlete')) {
-    return <AthleteApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (currentRoute.startsWith('/gym')) {
-    return <GymApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (currentRoute.startsWith('/admin')) {
-    return <AdminApp onBackToLanding={() => navigate('/')} />;
-  }
-  if (currentRoute.startsWith('/auth') || currentRoute.startsWith('/login')) {
-    return (
-      <AuthApp
-        onSuccess={(role) => navigate(`/${role}`)}
-        onBackToLanding={() => navigate('/')}
-      />
-    );
-  }
+    // Routing on primary domain (Landing, /coach, /athlete, /gym, /admin, /auth)
+    if (currentRoute.startsWith('/coach')) {
+      return <CoachApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (currentRoute.startsWith('/athlete')) {
+      return <AthleteApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (currentRoute.startsWith('/gym')) {
+      return <GymApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (currentRoute.startsWith('/admin')) {
+      return <AdminApp onBackToLanding={() => navigate('/')} />;
+    }
+    if (currentRoute.startsWith('/auth') || currentRoute.startsWith('/login')) {
+      return (
+        <AuthApp
+          onSuccess={(role) => navigate(`/${role}`)}
+          onBackToLanding={() => navigate('/')}
+        />
+      );
+    }
 
-  // Default: Landing Page
-  return <LandingPage onNavigate={navigate} />;
+    // Default: Landing Page
+    return <LandingPage onNavigate={navigate} />;
+  };
+
+  return (
+    <>
+      {renderContent()}
+      <PWAInstallBanner />
+    </>
+  );
 }
 
 export default App;

@@ -2,14 +2,21 @@
 <html lang="fa" dir="rtl" class="light">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#F6F8FB" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#0066FF" />
     <link rel="manifest" href="/manifest.json" />
+    
+    <!-- iOS PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="جیبی‌جیم" />
+    <meta name="format-detection" content="telephone=no" />
+
     <title>جیبی‌جیم | JibiGym — پلتفرم مربی، شاگرد و باشگاه</title>
+    
     <!-- Vazirmatn Font for Persian Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,5 +25,16 @@
   <body class="bg-[#F6F8FB] text-slate-800 antialiased selection:bg-blue-500/20 selection:text-blue-700 overflow-x-hidden font-sans">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Register PWA Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((reg) => console.log('[PWA] Service Worker registered:', reg.scope))
+            .catch((err) => console.warn('[PWA] Service Worker registration failed:', err));
+        });
+      }
+    </script>
   </body>
 </html>
