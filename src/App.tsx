@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserRole, SportTypeCode } from './types';
+import { UserRole, SportTypeCode, Movement } from './types';
 import { GlassCard } from './components/common/GlassCard';
 import { GlassButton } from './components/common/GlassButton';
 import { GlassBadge } from './components/common/GlassBadge';
@@ -13,6 +13,9 @@ import { PaymentModal } from './components/athlete/PaymentModal';
 import { CoachLinkModal } from './components/athlete/CoachLinkModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { GymOwnerDashboard } from './components/gym/GymOwnerDashboard';
+import { BodyMap } from './components/athlete/BodyMap';
+import { ExerciseLibraryView } from './components/common/ExerciseLibraryView';
+import { ExerciseDetailModal } from './components/common/ExerciseDetailModal';
 import {
   Dumbbell,
   Users,
@@ -24,19 +27,21 @@ import {
   Bell,
   Sparkles,
   LogOut,
-  UserCheck
+  UserCheck,
+  ShieldAlert
 } from 'lucide-react';
 
 export function App() {
-  // Current Active Role & Panel (Default to Coach as requested for core testing)
+  // Current Active Role & Panel (Default to Coach)
   const [activeRole, setActiveRole] = useState<UserRole>('coach');
-  const [currentView, setCurrentView] = useState<'dashboard' | 'builder' | 'workout' | 'home'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'builder' | 'workout' | 'home' | 'library' | 'bodymap'>('dashboard');
   const [activeTab, setActiveTab] = useState<string>('home');
 
   // Modals State
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isCoachLinkModalOpen, setIsCoachLinkModalOpen] = useState(false);
+  const [detailMovement, setDetailMovement] = useState<Movement | null>(null);
 
   // Bottom Tabs configuration based on current active role
   const getTabsForRole = (role: UserRole): TabItem[] => {
@@ -52,8 +57,8 @@ export function App() {
         return [
           { id: 'home', label: 'برنامه امروز', icon: <Dumbbell className="w-5 h-5" /> },
           { id: 'workout', label: 'تمرین فعال', icon: <Calendar className="w-5 h-5" /> },
+          { id: 'bodymap', label: 'نقشه آسیب', icon: <ShieldAlert className="w-5 h-5" /> },
           { id: 'payments', label: 'پرداخت‌ها', icon: <CreditCard className="w-5 h-5" /> },
-          { id: 'settings', label: 'پروفایل من', icon: <Settings className="w-5 h-5" /> },
         ];
       case 'admin':
         return [
@@ -78,10 +83,14 @@ export function App() {
       setCurrentView('builder');
     } else if (tabId === 'workout') {
       setCurrentView('workout');
+    } else if (tabId === 'library') {
+      setCurrentView('library');
+    } else if (tabId === 'bodymap') {
+      setCurrentView('bodymap');
     } else if (tabId === 'payments') {
       setIsPaymentModalOpen(true);
     } else {
-      setCurrentView('dashboard');
+      setCurrentView(activeRole === 'athlete' ? 'home' : 'dashboard');
     }
   };
 
@@ -215,8 +224,15 @@ export function App() {
 
         {/* Dynamic Panel Content Rendering */}
         <main>
+          {/* Universal Views: Library & BodyMap */}
+          {currentView === 'library' && (
+            <ExerciseLibraryView onOpenDetail={(m) => setDetailMovement(m)} />
+          )}
+
+          {currentView === 'bodymap' && <BodyMap />}
+
           {/* COACH PANEL */}
-          {activeRole === 'coach' && (
+          {activeRole === 'coach' && currentView !== 'library' && currentView !== 'bodymap' && (
             <>
               {currentView === 'builder' ? (
                 <ProgramBuilder onBack={() => setCurrentView('dashboard')} />
@@ -227,7 +243,7 @@ export function App() {
           )}
 
           {/* ATHLETE PANEL */}
-          {activeRole === 'athlete' && (
+          {activeRole === 'athlete' && currentView !== 'library' && currentView !== 'bodymap' && (
             <>
               {currentView === 'workout' ? (
                 <WorkoutPlayer
@@ -245,10 +261,14 @@ export function App() {
           )}
 
           {/* GYM OWNER PANEL */}
-          {activeRole === 'gym_owner' && <GymOwnerDashboard />}
+          {activeRole === 'gym_owner' && currentView !== 'library' && currentView !== 'bodymap' && (
+            <GymOwnerDashboard />
+          )}
 
           {/* ADMIN PANEL */}
-          {activeRole === 'admin' && <AdminDashboard />}
+          {activeRole === 'admin' && currentView !== 'library' && currentView !== 'bodymap' && (
+            <AdminDashboard />
+          )}
         </main>
 
         {/* Modals */}
@@ -281,6 +301,12 @@ export function App() {
         <CoachLinkModal
           isOpen={isCoachLinkModalOpen}
           onClose={() => setIsCoachLinkModalOpen(false)}
+        />
+
+        <ExerciseDetailModal
+          movement={detailMovement}
+          isOpen={!!detailMovement}
+          onClose={() => setDetailMovement(null)}
         />
 
         {/* Apple HIG Floating Bottom Tab Bar for Mobile Navigation */}
