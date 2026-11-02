@@ -51,9 +51,9 @@ export const LoginFlow: React.FC<LoginFlowProps> = ({ onSuccess, onCancel }) => 
       if (res.developmentCode) {
         setOtpCode(res.developmentCode);
       }
-    } catch {
+    } catch (err: any) {
       setLoading(false);
-      setStep('otp');
+      setError(err.message || 'خطا در ارتباط با سرور ارسال کد OTP');
     }
   };
 
@@ -69,9 +69,9 @@ export const LoginFlow: React.FC<LoginFlowProps> = ({ onSuccess, onCancel }) => 
       await api.verifyOtp(mobile, otpCode);
       setLoading(false);
       setStep('profile');
-    } catch {
+    } catch (err: any) {
       setLoading(false);
-      setStep('profile');
+      setError(err.message || 'کد تایید وارد شده نامعتبر یا منقضی است');
     }
   };
 
@@ -97,6 +97,7 @@ export const LoginFlow: React.FC<LoginFlowProps> = ({ onSuccess, onCancel }) => 
 
   const handleFinalSubmit = async () => {
     setLoading(true);
+    setError('');
     try {
       await api.registerUser({
         firstName,
@@ -107,9 +108,14 @@ export const LoginFlow: React.FC<LoginFlowProps> = ({ onSuccess, onCancel }) => 
       });
       setLoading(false);
       onSuccess(selectedRole, selectedSports);
-    } catch {
+    } catch (err: any) {
       setLoading(false);
-      onSuccess(selectedRole, selectedSports);
+      // If user already exists, proceed to login
+      if (err.message && err.message.includes('already exists')) {
+        onSuccess(selectedRole, selectedSports);
+      } else {
+        setError(err.message || 'خطا در ثبت مشخصات در سرور دیتابیس');
+      }
     }
   };
 

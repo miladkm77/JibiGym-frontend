@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GlassCard } from '../common/GlassCard';
 import { GlassButton } from '../common/GlassButton';
 import { GlassBadge } from '../common/GlassBadge';
-import { CURRENT_ATHLETE, MOCK_ASSIGNMENT } from '../../data/mockData';
-import { Play, Dumbbell, Calendar, Clock, CreditCard, ChevronLeft, ShieldCheck, Flame } from 'lucide-react';
+import { api } from '../../services/api';
+import { Assignment } from '../../types';
+import { Play, Dumbbell, Calendar, Clock, CreditCard, ChevronLeft, ShieldCheck, Flame, Loader2, AlertCircle } from 'lucide-react';
 
 interface AthleteHomeProps {
   onStartWorkout: () => void;
@@ -16,12 +17,48 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
   onOpenPayment,
   onOpenCoachLinkModal,
 }) => {
-  const [athlete] = useState(CURRENT_ATHLETE);
-  const [assignment] = useState(MOCK_ASSIGNMENT);
+  const [profile, setProfile] = useState<any>({
+    firstName: 'میلاد',
+    lastName: 'کریمی',
+    weight: 78,
+    height: 182,
+    goal: 'هایپرتروفی و ارتقای توان عضلانی',
+  });
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isPaid, setIsPaid] = useState(true);
 
-  // Today's workout is Day 1
-  const todayWorkout = assignment.program.days[0];
+  useEffect(() => {
+    loadAthleteData();
+  }, []);
+
+  const loadAthleteData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [plansData, profileData] = await Promise.allSettled([
+        api.getAthletePlans(2),
+        api.getAthleteProfile(2),
+      ]);
+
+      if (profileData.status === 'fulfilled' && profileData.value) {
+        setProfile(profileData.value);
+      }
+
+      if (plansData.status === 'fulfilled' && plansData.value.length > 0) {
+        const activeAssign = plansData.value[0];
+        setAssignment(activeAssign);
+        setIsPaid(activeAssign.status === 'active');
+      }
+    } catch (err: any) {
+      setError(err.message || 'خطا در برقراری ارتباط با سرور');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const todayWorkout = assignment?.program?.days?.[0];
 
   return (
     <div className="space-y-6 pb-24 text-right">
@@ -31,27 +68,29 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0066FF] to-sky-400 p-[2px] shadow-md shadow-blue-500/20">
               <img
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop&q=60"
-                alt={athlete.firstName}
+                src={profile.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                alt={profile.firstName}
                 className="w-full h-full object-cover rounded-2xl"
               />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-black text-slate-900">
-                  سلام، {athlete.firstName} عزیز 👋
+                  سلام، {profile.firstName} عزیز 👋
                 </h1>
                 <GlassBadge variant="blue" size="sm">
                   ورزشکار
                 </GlassBadge>
               </div>
-              <p className="text-xs text-slate-600 mt-1">هدف: {athlete.goal}</p>
+              <p className="text-xs text-slate-600 mt-1">هدف: {profile.goal}</p>
             </div>
           </div>
 
           <div className="flex flex-col items-end">
-            <span className="text-[10px] text-slate-500">وزن فعلی:</span>
-            <span className="text-sm font-bold font-mono text-[#0066FF]">{athlete.weightKg} کیلوگرم</span>
+            <span className="text-[10px] text-slate-500">وزن ثبت‌شده:</span>
+            <span className="text-sm font-bold font-mono text-[#0066FF]">
+              {profile.weight || 78} کیلوگرم
+            </span>
           </div>
         </div>
       </GlassCard>
@@ -69,9 +108,13 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-slate-500">مربی اختصاصی شما:</span>
-              <span className="text-xs font-bold text-slate-900">{athlete.activeCoach?.name}</span>
+              <span className="text-xs font-bold text-slate-900">
+                {assignment?.coachName || 'محمدجواد محمدی'}
+              </span>
             </div>
-            <p className="text-[11px] text-[#0066FF] font-semibold mt-0.5">{athlete.activeCoach?.sportType}</p>
+            <p className="text-[11px] text-[#0066FF] font-semibold mt-0.5">
+              مربی رسمی بدنسازی، کالیستنیکس و کراس‌فیت
+            </p>
           </div>
         </div>
 
@@ -80,8 +123,26 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
         </GlassButton>
       </GlassCard>
 
+      {/* Loading indicator */}
+      {loading && (
+        <div className="flex items-center justify-center py-12 gap-2 text-slate-500 text-sm">
+          <Loader2 className="w-5 h-5 animate-spin text-[#0066FF]" />
+          در حال دریافت برنامه تمرینی از سرور دیتابیس...
+        </div>
+      )}
+
+      {error && (
+        <GlassCard className="p-4 border-red-200 bg-red-50/50 flex items-center justify-between text-red-600 text-sm">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5" />
+            <span>{error}</span>
+          </div>
+          <GlassButton size="sm" onClick={loadAthleteData}>تلاش مجدد</GlassButton>
+        </GlassCard>
+      )}
+
       {/* Payment Alert if not paid */}
-      {!isPaid && (
+      {!loading && !isPaid && assignment && (
         <GlassCard className="p-4 border-orange-200 bg-orange-50/60 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
@@ -100,85 +161,97 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
         </GlassCard>
       )}
 
-      {/* TODAY'S WORKOUT HERO CARD */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-            <Flame className="w-4 h-4 text-[#0066FF]" />
-            برنامه تمرین امروز شما
-          </h2>
-          <span className="text-xs text-slate-500">جلسه اول این هفته</span>
-        </div>
-
-        <GlassCard className="p-5 relative overflow-hidden" variant="highlight">
-          <div className="relative z-10 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <GlassBadge variant="blue" size="sm" className="mb-1.5">
-                  روز ۱ از ۴
-                </GlassBadge>
-                <h3 className="text-lg font-black text-slate-900">{todayWorkout.title}</h3>
-                <p className="text-xs text-slate-600 mt-1">
-                  تمرین شامل {todayWorkout.movements.length} حرکت اصلی هایپرتروفی و مقاومتی
-                </p>
+      {/* TODAY'S WORKOUT CARD */}
+      {!loading && assignment && (
+        <GlassCard className="p-5 overflow-hidden relative" variant="highlight">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-blue-100 text-[#0066FF] flex items-center justify-center">
+                <Flame className="w-4 h-4 fill-current" />
               </div>
-
-              <div className="text-left font-mono">
-                <span className="text-xs text-slate-500 block">مدت تخمینی</span>
-                <span className="text-sm font-bold text-[#0066FF]">۵۵ دقیقه</span>
-              </div>
+              <span className="text-xs font-black text-[#0066FF] uppercase tracking-wider">
+                جلسه تمرینی فعال امروز
+              </span>
             </div>
-
-            {/* Quick Preview of Movements */}
-            <div className="space-y-2 pt-2 border-t border-slate-200/80">
-              {todayWorkout.movements.map((m, i) => (
-                <div key={m.id} className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-white/90 border border-slate-100 shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#0066FF] border border-blue-200 flex items-center justify-center text-[10px] font-mono font-bold">
-                      {i + 1}
-                    </span>
-                    <span className="font-bold text-slate-900">{m.movement.title}</span>
-                  </div>
-                  <span className="font-mono text-slate-500 font-medium">
-                    {m.sets} ست × {m.reps} تکرار
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Start Workout CTA Button */}
-            <GlassButton
-              variant="primary"
-              size="lg"
-              fullWidth
-              onClick={onStartWorkout}
-              icon={<Play className="w-5 h-5 fill-white" />}
-            >
-              شروع تمرین امروز با راهنما و تایمر
-            </GlassButton>
+            <GlassBadge variant="cyan" size="sm">
+              {todayWorkout?.title || 'روز ۱: عضلات سینه و بازو'}
+            </GlassBadge>
           </div>
+
+          <h2 className="text-lg font-black text-slate-900 mb-1">
+            {assignment.program?.title || 'برنامه تمرینی تخصصی'}
+          </h2>
+          <p className="text-xs text-slate-500 mb-4 line-clamp-2">
+            {assignment.program?.description || 'برنامه اختصاصی شما ثبت‌شده در سرور'}
+          </p>
+
+          {/* Quick Metrics */}
+          <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-50 border border-slate-100 mb-5 text-center text-xs">
+            <div>
+              <span className="text-[10px] text-slate-400 block">تعداد حرکات</span>
+              <span className="font-bold text-slate-800 font-mono">
+                {todayWorkout?.movements?.length || 3} حرکت
+              </span>
+            </div>
+            <div className="border-x border-slate-200">
+              <span className="text-[10px] text-slate-400 block">زمان تقریبی</span>
+              <span className="font-bold text-[#0066FF] font-mono">۵۵ دقیقه</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block">تاریخ پایان</span>
+              <span className="font-bold text-slate-800 font-mono">{assignment.endDate}</span>
+            </div>
+          </div>
+
+          {/* Big CTA Button */}
+          <GlassButton
+            variant="primary"
+            size="lg"
+            className="w-full justify-center shadow-lg shadow-blue-500/25"
+            onClick={onStartWorkout}
+            icon={<Play className="w-5 h-5 fill-current ml-1" />}
+          >
+            شروع تمرین امروز (ورود به پلیر هوشمند)
+          </GlassButton>
         </GlassCard>
-      </div>
+      )}
 
-      {/* Week Schedule Overview */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900">برنامه کامل دوره جاری</h2>
-          <span className="text-xs text-slate-500 font-mono">پایان دوره: {assignment.endDate}</span>
-        </div>
+      {/* Exercises list in today's workout */}
+      {!loading && todayWorkout && todayWorkout.movements?.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <Dumbbell className="w-4 h-4 text-[#0066FF]" />
+              حرکات تمرینی امروز
+            </h3>
+            <span className="text-xs text-slate-400">
+              {todayWorkout.movements.length} حرکت
+            </span>
+          </div>
 
-        <div className="grid grid-cols-2 gap-2.5">
-          {assignment.program.days.map((day) => (
-            <GlassCard key={day.id} className="p-3.5 text-right">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] text-[#0066FF] font-bold">روز {day.dayIndex}</span>
-                <span className="text-[10px] text-slate-400 font-mono">{day.movements.length} حرکت</span>
-              </div>
-              <h4 className="text-xs font-bold text-slate-900 line-clamp-1">{day.title}</h4>
-            </GlassCard>
-          ))}
+          <div className="space-y-2">
+            {todayWorkout.movements.map((pm, idx) => (
+              <GlassCard key={pm.movementId || idx} className="p-3.5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-mono text-xs font-bold flex items-center justify-center">
+                    {idx + 1}
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900">{pm.movement?.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                      {pm.sets} ست × {pm.reps} تکرار | استراحت: {pm.restSeconds} ثانیه
+                    </p>
+                  </div>
+                </div>
+
+                <div className="w-8 h-8 rounded-full bg-blue-50 text-[#0066FF] flex items-center justify-center">
+                  <ChevronLeft className="w-4 h-4" />
+                </div>
+              </GlassCard>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

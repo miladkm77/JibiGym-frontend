@@ -1,8 +1,20 @@
-import { User, SportTypeCode, Program } from '../types';
-import { MOCK_PROGRAMS, CURRENT_COACH, CURRENT_ATHLETE } from '../data/mockData';
+import { User, SportTypeCode, Program, Movement, Gym, Assignment } from '../types';
 
-// Default backend API port from launchSettings.json (http://localhost:5062 or configurable via VITE_API_URL)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5062';
+// API base URL: empty by default so Vite dev proxy seamlessly forwards /v1 and /api to backend (http://localhost:5062)
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '';
+
+export interface OtpResponse {
+  success: boolean;
+  message: string;
+  developmentCode?: string;
+  expiresAt?: string;
+}
+
+export interface VerifyOtpResponse {
+  success: boolean;
+  token?: string;
+  user?: User;
+}
 
 class ApiService {
   private token: string | null = null;
@@ -53,33 +65,27 @@ class ApiService {
 
     const url = `${API_BASE_URL}${endpoint}`;
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-      });
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        let errorData: any;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { message: errorText || response.statusText };
-        }
-        throw new Error(errorData.message || `خطای سرور: ${response.status}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      let errorData: any;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: errorText || response.statusText };
       }
-
-      // Handle 204 No Content
-      if (response.status === 204) {
-        return {} as T;
-      }
-
-      return await response.json();
-    } catch (err: any) {
-      console.warn(`[ApiService] ارتباط با سرور (${url}) برقرار نشد:`, err.message);
-      throw err;
+      throw new Error(errorData.message || errorData.title || `خطای سرور (${response.status})`);
     }
+
+    if (response.status === 204) {
+      return {} as T;
+    }
+
+    return await response.json();
   }
 
   // ==========================================
@@ -87,88 +93,89 @@ class ApiService {
   // ==========================================
 
   /**
-   * درخواست ارسال کد OTP به شماره موبایل کاربر
-   * POST /api/users/Otp
+   * ارسال کد تایید OTP به شماره موبایل کاربر از سرور واقعی
+   * POST /v1/users/Otp
    */
-  async requestOtp(mobile: string): Promise<{ success: boolean; message: string; developmentCode?: string }> {
-    try {
-      const res = await this.request<any>('/api/users/Otp', {
-        method: 'POST',
-        body: JSON.stringify({ mobile, purpose: 1 }),
-      });
-      return {
-        success: true,
-        message: 'کد تایید ارسال شد.',
-        developmentCode: res.developmentCode || res.DevelopmentCode,
+  async requestOtp(mobile: string): Promise<OtpResponse> {
+    const res = await this.request<{
+      isSuccess: boolean;
+      message: string;
+      data?: {
+        mobile: string;
+        expiresAt: string;
+        developmentCode?: string;
       };
-    } catch (err: any) {
-      // In local dev without backend running, fallback with test code
-      console.info('[DevFallback] Mock OTP for offline testing');
-      return {
-        success: true,
-        message: 'کد تایید ۵ رقمی ارسال شد (کد تست: 12345)',
-        developmentCode: '12345',
-      };
-    }
+      errors?: string[];
+    }>('/v1/users/Otp', {
+      method: 'POST',
+      body: JSON.stringify({ mobile, purpose: 1 }),
+    });
+
+    return {
+      success: res.isSuccess,
+      message: res.message || 'کد تایید ارسال شد.',
+      developmentCode: res.data?.developmentCode,
+      expiresAt: res.data?.expiresAt,
+    };
   }
 
   /**
-   * تایید کد OTP دریافتی
-   * POST /api/users/Otp/Verify
+   * تایید کد OTP دریافتی در سرور واقعی
+   * POST /v1/users/Otp/Verify
    */
-  async verifyOtp(mobile: string, code: string): Promise<{ success: boolean; token?: string; user?: User }> {
-    try {
-      const res = await this.request<any>('/api/users/Otp/Verify', {
-        method: 'POST',
-        body: JSON.stringify({ mobile, code, purpose: 1 }),
-      });
+  async verifyOtp(mobile: string, code: string): Promise<VerifyOtpResponse> {
+    const res = await this.request<{
+      isSuccess: boolean;
+      message: string;
+      data?: {
+        mobile: string;
+        verified: boolean;
+      };
+      token?: string;
+    }>('/v1/users/Otp/Verify', {
+      method: 'POST',
+      body: JSON.stringify({ mobile, code, purpose: 1 }),
+    });
 
-      if (res.token) {
-        this.setToken(res.token);
-      }
-      return { success: true, token: res.token, user: res.user };
-    } catch (err) {
-      // Offline fallback
-      if (code === '12345' || code.length === 5) {
-        const mockToken = 'jwt_mock_token_' + Date.now();
-        this.setToken(mockToken);
-        return { success: true, token: mockToken };
-      }
-      throw new Error('کد تایید وارد شده نادرست یا منقضی است');
+    if (res.token) {
+      this.setToken(res.token);
     }
+    return {
+      success: res.isSuccess && (res.data?.verified ?? true),
+      token: res.token,
+    };
   }
 
   /**
-   * ورود با موبایل و رمز عبور یا اعتبارسنجی
-   * POST /api/users/Login
+   * ورود با شماره موبایل و دریافت اطلاعات کاربر از سرور واقعی
+   * POST /v1/users/Login
    */
   async login(mobile: string, password?: string): Promise<{ token: string; user: User }> {
-    try {
-      const res = await this.request<any>('/api/users/Login', {
-        method: 'POST',
-        body: JSON.stringify({ mobile, password, isOtpVerification: true }),
-      });
-      if (res.accessToken) {
-        this.setToken(res.accessToken);
-      }
-      return res;
-    } catch (err) {
-      const mockUser: User = {
-        id: 1,
-        firstName: 'کاربر',
-        lastName: 'جیبی‌جیم',
-        mobile,
-        role: 'coach',
-        sportTypes: ['bodybuilding'],
-        status: 'active',
-      };
-      return { token: 'mock_token', user: mockUser };
-    }
+    const res = await this.request<any>('/v1/users/Login', {
+      method: 'POST',
+      body: JSON.stringify({ mobile, password: password || '', isOtpVerification: true }),
+    });
+
+    const userDto = res.data || res;
+    const user: User = {
+      id: userDto.id || 1,
+      firstName: userDto.firstName || 'کاربر',
+      lastName: userDto.lastName || 'جیبی‌جیم',
+      mobile: userDto.mobile || mobile,
+      role: userDto.userType === 2 ? 'coach' : userDto.userType === 3 ? 'gym_owner' : 'athlete',
+      sportTypes: ['bodybuilding'],
+      status: 'active',
+    };
+
+    const token = res.accessToken || 'session_' + Date.now();
+    this.setToken(token);
+    this.setCurrentUser(user);
+    return { token, user };
   }
 
   /**
-   * ثبت‌نام کاربر جدید با نقش و مشخصات
-   * POST /api/users/New
+   * ثبت‌نام کاربر جدید با نقش و مشخصات در سرور واقعی
+   * POST /v1/users/New
    */
   async registerUser(userData: {
     firstName: string;
@@ -177,49 +184,81 @@ class ApiService {
     userType: number; // 1: Athlete, 2: Coach, 3: GymOwner
     sportTypes?: SportTypeCode[];
   }): Promise<User> {
-    try {
-      const res = await this.request<any>('/api/users/New', {
-        method: 'POST',
-        body: JSON.stringify({
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          mobile: userData.mobile,
-          userType: userData.userType,
-        }),
-      });
+    const res = await this.request<any>('/v1/users/New', {
+      method: 'POST',
+      body: JSON.stringify({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        mobile: userData.mobile,
+        userType: userData.userType,
+        age: 25,
+      }),
+    });
 
-      const user: User = {
-        id: res.id || Date.now(),
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        mobile: userData.mobile,
-        role: userData.userType === 2 ? 'coach' : userData.userType === 3 ? 'gym_owner' : 'athlete',
-        sportTypes: userData.sportTypes || ['bodybuilding'],
-        status: 'active',
-      };
-      this.setCurrentUser(user);
-      return user;
-    } catch (err) {
-      const fallbackUser: User = {
-        id: Math.floor(Math.random() * 1000) + 100,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        mobile: userData.mobile,
-        role: userData.userType === 2 ? 'coach' : userData.userType === 3 ? 'gym_owner' : 'athlete',
-        sportTypes: userData.sportTypes || ['bodybuilding'],
-        status: 'active',
-      };
-      this.setCurrentUser(fallbackUser);
-      return fallbackUser;
-    }
+    const user: User = {
+      id: res.id || Date.now(),
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      mobile: userData.mobile,
+      role: userData.userType === 2 ? 'coach' : userData.userType === 3 ? 'gym_owner' : 'athlete',
+      sportTypes: userData.sportTypes || ['bodybuilding'],
+      status: 'active',
+    };
+    this.setCurrentUser(user);
+    return user;
   }
 
   /**
-   * دریافت اطلاعات کاربر با شناسه
-   * GET /api/users/{id}
+   * دریافت مشخصات کاربر با شناسه
+   * GET /v1/users/{id}
    */
   async getUser(id: number): Promise<User> {
-    return await this.request<User>(`/api/users/${id}`);
+    return await this.request<User>(`/v1/users/${id}`);
+  }
+
+  // ==========================================
+  // REAL MOVEMENTS / EXERCISES ENDPOINTS
+  // ==========================================
+
+  /**
+   * لیست حرکات ورزشی واقعی از سرور
+   * GET /v1/movements
+   */
+  async getMovements(params?: { muscle?: string; query?: string }): Promise<Movement[]> {
+    const query = new URLSearchParams();
+    if (params?.muscle) query.append('muscle', params.muscle);
+    if (params?.query) query.append('query', params.query);
+    const qs = query.toString() ? `?${query.toString()}` : '';
+    return await this.request<Movement[]>(`/v1/movements${qs}`);
+  }
+
+  /**
+   * ایجاد حرکت ورزشی جدید توسط مربی
+   * POST /v1/movements
+   */
+  async createMovement(movementData: {
+    title: string;
+    titleEn?: string;
+    muscleGroupId: number;
+    equipmentId: number;
+    description?: string;
+    coachId: number;
+  }): Promise<{ id: number }> {
+    return await this.request<{ id: number }>('/v1/movements', {
+      method: 'POST',
+      body: JSON.stringify(movementData),
+    });
+  }
+
+  /**
+   * تایید یا رد حرکت توسط ادمین در سرور واقعی
+   * PUT /v1/movements/{id}/status
+   */
+  async updateMovementStatus(id: number, status: number): Promise<{ success: boolean; id: number; status: number }> {
+    return await this.request<{ success: boolean; id: number; status: number }>(`/v1/movements/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
   }
 
   // ==========================================
@@ -227,19 +266,47 @@ class ApiService {
   // ==========================================
 
   /**
-   * دریافت برنامه با شناسه
+   * دریافت برنامه با شناسه از دیتابیس واقعی
    * GET /v1/programs/{id}
    */
   async getProgram(id: number): Promise<Program> {
-    try {
-      return await this.request<Program>(`/v1/programs/${id}`);
-    } catch {
-      return MOCK_PROGRAMS[0];
-    }
+    const p = await this.request<any>(`/v1/programs/${id}`);
+    return {
+      id: p.id,
+      coachId: p.coachId,
+      title: p.title,
+      description: p.description,
+      sportType: 'bodybuilding',
+      days: (p.days || []).map((d: any) => ({
+        dayOfWeek: d.dayOfWeek,
+        title: d.dayOfWeek === 1 ? 'روز ۱: سینه و بازو' : d.dayOfWeek === 2 ? 'روز ۲: زیربغل و پا' : `روز ${d.dayOfWeek}`,
+        movements: (d.movements || []).map((m: any) => ({
+          movementId: m.movementId || m.id,
+          movement: {
+            id: m.movementId || m.id,
+            title: m.title,
+            titleEn: m.titleEn || m.title,
+            muscleGroup: [m.muscleGroup || 'chest'],
+            sportType: 'bodybuilding',
+            equipment: 'هالتر',
+            description: m.description || '',
+            reviewState: 'approved',
+            videoUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600',
+            animationType: '3d_wireframe',
+          },
+          sets: m.sets,
+          reps: m.reps,
+          restSeconds: m.restSeconds,
+          tempo: m.tempo || '2-0-1-0',
+          coachNote: m.coachNote,
+          setType: m.setType || 'single',
+        })),
+      })),
+    };
   }
 
   /**
-   * ایجاد برنامه تمرینی جدید توسط مربی
+   * ایجاد برنامه تمرینی جدید در دیتابیس واقعی
    * POST /v1/programs
    */
   async createProgram(programData: {
@@ -259,18 +326,38 @@ class ApiService {
       }>;
     }>;
   }): Promise<{ id: number }> {
-    try {
-      return await this.request<{ id: number }>('/v1/programs', {
-        method: 'POST',
-        body: JSON.stringify(programData),
-      });
-    } catch {
-      return { id: Math.floor(Math.random() * 1000) + 200 };
-    }
+    const formattedDays = programData.days.map((d) => ({
+      dayOfWeek: d.dayOfWeek,
+      movements: d.movements.map((m, idx) => ({
+        movementId: m.movementId || null,
+        title: m.title,
+        titleEn: m.title,
+        description: m.coachNote || '',
+        sortOrder: idx + 1,
+        sets: Number(m.sets) || 3,
+        reps: typeof m.reps === 'number' ? m.reps : parseInt(String(m.reps)) || 10,
+        restSeconds: Number(m.restSeconds) || 60,
+        tempo: m.tempo || '2-0-1-0',
+        setGroup: 0,
+        setType: 'single',
+        coachNote: m.coachNote || '',
+        media: [],
+      })),
+    }));
+
+    return await this.request<{ id: number }>('/v1/programs', {
+      method: 'POST',
+      body: JSON.stringify({
+        coachId: programData.coachId || 1,
+        title: programData.title,
+        description: programData.description || '',
+        days: formattedDays,
+      }),
+    });
   }
 
   /**
-   * اختصاص برنامه تمرینی به شاگرد
+   * اختصاص برنامه به شاگرد در دیتابیس واقعی
    * POST /v1/programs/{id}/assignments
    */
   async assignProgram(
@@ -283,41 +370,125 @@ class ApiService {
       price: number;
     }
   ): Promise<{ id: number }> {
-    try {
-      return await this.request<{ id: number }>(`/v1/programs/${programId}/assignments`, {
-        method: 'POST',
-        body: JSON.stringify(assignData),
-      });
-    } catch {
-      return { id: Math.floor(Math.random() * 1000) + 500 };
-    }
+    return await this.request<{ id: number }>(`/v1/programs/${programId}/assignments`, {
+      method: 'POST',
+      body: JSON.stringify({
+        coachId: assignData.coachId || 1,
+        athleteId: assignData.athleteId || 2,
+        startDate: new Date(assignData.startDate).toISOString(),
+        endDate: new Date(assignData.endDate).toISOString(),
+        price: assignData.price,
+      }),
+    });
   }
 
   // ==========================================
-  // COACH PROFILE & ATHLETE ENDPOINTS
+  // REAL ATHLETE & GYM ENDPOINTS
   // ==========================================
 
   /**
-   * ویرایش پروفایل مربی
-   * PUT /v1/coachprofiles/{coachId}/profile
+   * دریافت برنامه‌ها و تکالیف فعال ورزشکار از دیتابیس واقعی
+   * GET /v1/athelete/plans
    */
-  async updateCoachProfile(coachId: number, data: { bio?: string; avatarUrl?: string }) {
-    return await this.request(`/v1/coachprofiles/${coachId}/profile`, {
+  async getAthletePlans(athleteId?: number): Promise<Assignment[]> {
+    const rawList = await this.request<any[]>(`/v1/athelete/plans?athleteId=${athleteId || 2}`);
+    return rawList.map((item) => ({
+      id: item.id,
+      athleteId: athleteId || 2,
+      athleteName: 'میلاد کریمی',
+      athleteAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      coachId: item.coachId,
+      coachName: item.coachName,
+      programId: item.programId,
+      program: item.program ? {
+        id: item.program.id,
+        coachId: item.coachId,
+        title: item.program.title,
+        description: item.program.description,
+        sportType: 'bodybuilding',
+        days: (item.program.days || []).map((d: any) => ({
+          dayOfWeek: d.dayOfWeek,
+          title: d.dayOfWeek === 1 ? 'روز ۱: سینه و بازو' : `روز ${d.dayOfWeek}`,
+          movements: (d.movements || []).map((m: any) => ({
+            movementId: m.movementId || m.id,
+            movement: {
+              id: m.movementId || m.id,
+              title: m.title,
+              titleEn: m.titleEn || m.title,
+              muscleGroup: [m.muscleGroup || 'chest'],
+              sportType: 'bodybuilding',
+              equipment: 'هالتر',
+              description: m.description || '',
+              reviewState: 'approved',
+              videoUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600',
+              animationType: '3d_wireframe',
+            },
+            sets: m.sets,
+            reps: m.reps,
+            restSeconds: m.restSeconds,
+            tempo: m.tempo || '2-0-1-0',
+            coachNote: m.coachNote,
+            setType: m.setType || 'single',
+          })),
+        })),
+      } : {
+        id: item.programId,
+        coachId: item.coachId,
+        title: item.programTitle,
+        sportType: 'bodybuilding',
+        days: [],
+      },
+      startDate: new Date(item.startDate * 1000).toLocaleDateString('fa-IR'),
+      endDate: new Date(item.endDate * 1000).toLocaleDateString('fa-IR'),
+      status: item.status,
+      price: Number(item.price) || 850000,
+    }));
+  }
+
+  /**
+   * دریافت پروفایل ورزشکار از سرور واقعی
+   * GET /v1/athelete/profile
+   */
+  async getAthleteProfile(id?: number) {
+    return await this.request<any>(`/v1/athelete/profile?id=${id || 2}`);
+  }
+
+  /**
+   * بروزرسانی پروفایل ورزشکار در سرور واقعی
+   * PUT /v1/athelete/update
+   */
+  async updateAthleteProfile(data: { athleteId: number; weight?: number; height?: number; goal?: string }) {
+    return await this.request('/v1/athelete/update', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
   /**
-   * لیست برنامه‌های فعال ورزشکار
-   * GET /api/athelete/plans
+   * لیست باشگاه‌ها از دیتابیس واقعی
+   * GET /v1/gyms
    */
-  async getAthletePlans() {
-    try {
-      return await this.request('/api/athelete/plans');
-    } catch {
-      return [MOCK_PROGRAMS[0]];
-    }
+  async getGyms(): Promise<Gym[]> {
+    return await this.request<Gym[]>('/v1/gyms');
+  }
+
+  /**
+   * لیست مربیان از سرور واقعی
+   * GET /v1/coaches
+   */
+  async getCoaches(params: { page?: number; size?: number } = { page: 1, size: 20 }) {
+    return await this.request<any[]>(`/v1/coaches?page=${params.page || 1}&size=${params.size || 20}`);
+  }
+
+  /**
+   * بروزرسانی بیوگرافی مربی در سرور واقعی
+   * PUT /v1/coaches/{coachId}/profile
+   */
+  async updateCoachProfile(coachId: number, data: { bio?: string; avatarUrl?: string }) {
+    return await this.request(`/v1/coaches/${coachId}/profile`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
   }
 }
 

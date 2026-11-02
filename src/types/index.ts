@@ -55,24 +55,40 @@ export interface Gym {
   id: number;
   name: string;
   address: string;
-  city: string;
+  city?: string;
+  cityId?: number;
   avatarUrl?: string;
   isVerified: boolean;
-  coachesCount: number;
-  equipmentList: string[];
+  coachesCount?: number;
+  activeAthletesCount?: number;
+  activeCoachesCount?: number;
+  equipmentList?: string[];
+  equipments?: Array<{
+    id: number;
+    name: string;
+    category?: string;
+    status: string;
+    condition?: string;
+  }>;
 }
 
 export interface Movement {
   id: number;
   title: string;
   titleEn?: string;
-  muscleGroup: string;
+  muscleGroup: string | string[];
+  muscleGroupId?: number;
   equipment?: string;
+  equipmentId?: number;
   description?: string;
   videoUrl?: string;
   thumbnailUrl?: string;
-  scope: 'global' | 'coach_private';
-  reviewState?: 'none' | 'submitted_for_review' | 'approved' | 'rejected';
+  animationType?: string;
+  sportType?: SportTypeCode | string;
+  scope?: 'global' | 'coach_private' | number;
+  reviewState?: 'none' | 'submitted_for_review' | 'approved' | 'rejected' | string;
+  ownerCoachId?: number;
+  status?: number;
 }
 
 export interface ProgramMovement {
@@ -81,18 +97,20 @@ export interface ProgramMovement {
   movement: Movement;
   sortOrder: number;
   sets: number;
-  reps: string; // e.g., "12-10-8" or "تا ناتوانی"
+  reps: string | number; // e.g., "12-10-8" or 10
   restSeconds: number;
   tempo?: string;
   supersetGroup?: number;
   coachNote?: string;
+  setType?: string;
   isCompleted?: boolean;
 }
 
 export interface ProgramDay {
-  id: number;
+  id?: number;
   dayIndex: number;
-  title: string; // e.g., "سینه و پشت‌بازو"
+  dayOfWeek?: number;
+  title?: string;
   movements: ProgramMovement[];
 }
 
@@ -101,8 +119,10 @@ export interface Program {
   coachId: number;
   coachName?: string;
   title: string;
-  daysPerWeek: number;
-  isTemplate: boolean;
+  description?: string;
+  daysPerWeek?: number;
+  isTemplate?: boolean;
+  sportType?: SportTypeCode | string;
   notes?: string;
   days: ProgramDay[];
 }
@@ -111,7 +131,7 @@ export interface Assignment {
   id: number;
   programId: number;
   program: Program;
-  linkId: number;
+  linkId?: number;
   athleteId: number;
   athleteName: string;
   athleteAvatar?: string;
@@ -119,9 +139,9 @@ export interface Assignment {
   coachName: string;
   startDate: string;
   endDate: string;
-  status: 'active' | 'pending_payment' | 'expired' | 'archived' | 'revoked';
-  accessMode: 'pay_first' | 'trust_immediate';
-  price: number; // in Tomans / Rials
+  status: 'active' | 'pending_payment' | 'expired' | 'archived' | 'revoked' | string;
+  accessMode?: 'pay_first' | 'trust_immediate' | number;
+  price: number; // in Tomans
 }
 
 export interface PaymentReceipt {
