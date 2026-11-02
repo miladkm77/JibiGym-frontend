@@ -29,7 +29,7 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
       <GlassCard className="p-5" variant="highlight">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 p-[2px] shadow-glass-glow">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0066FF] to-sky-400 p-[2px] shadow-md shadow-blue-500/20">
               <img
                 src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop&q=60"
                 alt={athlete.firstName}
@@ -38,20 +38,20 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-black text-white">
+                <h1 className="text-base font-black text-slate-900">
                   سلام، {athlete.firstName} عزیز 👋
                 </h1>
-                <GlassBadge variant="emerald" size="sm">
+                <GlassBadge variant="blue" size="sm">
                   ورزشکار
                 </GlassBadge>
               </div>
-              <p className="text-xs text-slate-300 mt-1">هدف: {athlete.goal}</p>
+              <p className="text-xs text-slate-600 mt-1">هدف: {athlete.goal}</p>
             </div>
           </div>
 
           <div className="flex flex-col items-end">
-            <span className="text-[10px] text-slate-400">وزن فعلی:</span>
-            <span className="text-sm font-bold font-mono text-emerald-400">{athlete.weightKg} کیلوگرم</span>
+            <span className="text-[10px] text-slate-500">وزن فعلی:</span>
+            <span className="text-sm font-bold font-mono text-[#0066FF]">{athlete.weightKg} کیلوگرم</span>
           </div>
         </div>
       </GlassCard>
@@ -59,7 +59,7 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
       {/* Coach Info Card */}
       <GlassCard className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl overflow-hidden border border-white/10 shrink-0">
+          <div className="w-11 h-11 rounded-xl overflow-hidden border border-slate-200 shrink-0">
             <img
               src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&auto=format&fit=crop&q=60"
               alt="مربی شما"
@@ -68,10 +68,10 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-slate-400">مربی اختصاصی شما:</span>
-              <span className="text-xs font-bold text-white">{athlete.activeCoach?.name}</span>
+              <span className="text-[11px] text-slate-500">مربی اختصاصی شما:</span>
+              <span className="text-xs font-bold text-slate-900">{athlete.activeCoach?.name}</span>
             </div>
-            <p className="text-[11px] text-emerald-400 mt-0.5">{athlete.activeCoach?.sportType}</p>
+            <p className="text-[11px] text-[#0066FF] font-semibold mt-0.5">{athlete.activeCoach?.sportType}</p>
           </div>
         </div>
 
@@ -82,14 +82,14 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
 
       {/* Payment Alert if not paid */}
       {!isPaid && (
-        <GlassCard className="p-4 border-orange-500/40 bg-orange-500/10 flex items-center justify-between">
+        <GlassCard className="p-4 border-orange-200 bg-orange-50/60 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-white">شهریه این دوره تمرینی پرداخت نشده است</h4>
-              <p className="text-[11px] text-orange-200 mt-0.5">
+              <h4 className="text-xs font-bold text-slate-900">شهریه این دوره تمرینی پرداخت نشده است</h4>
+              <p className="text-[11px] text-orange-700 mt-0.5">
                 مبلغ: {assignment.price.toLocaleString('fa-IR')} تومان (درگاه یا کارت‌به‌کارت)
               </p>
             </div>
@@ -103,43 +103,43 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
       {/* TODAY'S WORKOUT HERO CARD */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <Flame className="w-4 h-4 text-orange-400" />
+          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <Flame className="w-4 h-4 text-[#0066FF]" />
             برنامه تمرین امروز شما
           </h2>
-          <span className="text-xs text-slate-400">جلسه اول این هفته</span>
+          <span className="text-xs text-slate-500">جلسه اول این هفته</span>
         </div>
 
         <GlassCard className="p-5 relative overflow-hidden" variant="highlight">
           <div className="relative z-10 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <GlassBadge variant="cyan" size="sm" className="mb-1.5">
+                <GlassBadge variant="blue" size="sm" className="mb-1.5">
                   روز ۱ از ۴
                 </GlassBadge>
-                <h3 className="text-lg font-black text-white">{todayWorkout.title}</h3>
-                <p className="text-xs text-slate-300 mt-1">
+                <h3 className="text-lg font-black text-slate-900">{todayWorkout.title}</h3>
+                <p className="text-xs text-slate-600 mt-1">
                   تمرین شامل {todayWorkout.movements.length} حرکت اصلی هایپرتروفی و مقاومتی
                 </p>
               </div>
 
               <div className="text-left font-mono">
-                <span className="text-xs text-slate-400 block">مدت تخمینی</span>
-                <span className="text-sm font-bold text-emerald-400">۵۵ دقیقه</span>
+                <span className="text-xs text-slate-500 block">مدت تخمینی</span>
+                <span className="text-sm font-bold text-[#0066FF]">۵۵ دقیقه</span>
               </div>
             </div>
 
             {/* Quick Preview of Movements */}
-            <div className="space-y-2 pt-2 border-t border-white/10">
+            <div className="space-y-2 pt-2 border-t border-slate-200/80">
               {todayWorkout.movements.map((m, i) => (
-                <div key={m.id} className="flex items-center justify-between text-xs p-2 rounded-xl bg-black/30">
+                <div key={m.id} className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-white/90 border border-slate-100 shadow-sm">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-lg bg-white/10 flex items-center justify-center text-[10px] font-mono text-emerald-400">
+                    <span className="w-5 h-5 rounded-lg bg-blue-50 text-[#0066FF] border border-blue-200 flex items-center justify-center text-[10px] font-mono font-bold">
                       {i + 1}
                     </span>
-                    <span className="font-bold text-white">{m.movement.title}</span>
+                    <span className="font-bold text-slate-900">{m.movement.title}</span>
                   </div>
-                  <span className="font-mono text-slate-400">
+                  <span className="font-mono text-slate-500 font-medium">
                     {m.sets} ست × {m.reps} تکرار
                   </span>
                 </div>
@@ -152,7 +152,7 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
               size="lg"
               fullWidth
               onClick={onStartWorkout}
-              icon={<Play className="w-5 h-5 fill-black" />}
+              icon={<Play className="w-5 h-5 fill-white" />}
             >
               شروع تمرین امروز با راهنما و تایمر
             </GlassButton>
@@ -163,18 +163,18 @@ export const AthleteHome: React.FC<AthleteHomeProps> = ({
       {/* Week Schedule Overview */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white">برنامه کامل دوره جاری</h2>
-          <span className="text-xs text-slate-400 font-mono">پایان دوره: {assignment.endDate}</span>
+          <h2 className="text-sm font-bold text-slate-900">برنامه کامل دوره جاری</h2>
+          <span className="text-xs text-slate-500 font-mono">پایان دوره: {assignment.endDate}</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2.5">
           {assignment.program.days.map((day) => (
             <GlassCard key={day.id} className="p-3.5 text-right">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] text-emerald-400 font-bold">روز {day.dayIndex}</span>
-                <span className="text-[10px] text-slate-500 font-mono">{day.movements.length} حرکت</span>
+                <span className="text-[10px] text-[#0066FF] font-bold">روز {day.dayIndex}</span>
+                <span className="text-[10px] text-slate-400 font-mono">{day.movements.length} حرکت</span>
               </div>
-              <h4 className="text-xs font-bold text-white line-clamp-1">{day.title}</h4>
+              <h4 className="text-xs font-bold text-slate-900 line-clamp-1">{day.title}</h4>
             </GlassCard>
           ))}
         </div>

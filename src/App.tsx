@@ -101,41 +101,41 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090B0E] text-slate-100 relative overflow-x-hidden">
-      {/* Background Ambient Glow Elements */}
-      <div className="ambient-glow-green top-0 right-10" />
-      <div className="ambient-glow-cyan top-40 left-10" />
-      <div className="ambient-glow-orange bottom-20 right-1/3" />
+    <div className="min-h-screen bg-[#F6F8FB] text-slate-800 relative overflow-x-hidden">
+      {/* Background Ambient Athletic Glow Elements */}
+      <div className="ambient-glow-blue top-0 right-10" />
+      <div className="ambient-glow-sky top-40 left-10" />
+      <div className="ambient-glow-soft bottom-20 right-1/3" />
 
       {/* Main Container */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 pt-3 pb-24">
-        {/* Top App Header with Liquid Glass Navigation Bar */}
+        {/* Top App Header with Liquid White Glass Navigation Bar */}
         <header className="sticky top-2 z-40 mb-5">
-          <GlassCard className="p-3 px-4 flex items-center justify-between shadow-2xl backdrop-blur-glass-heavy">
+          <GlassCard className="p-3 px-4 flex items-center justify-between shadow-sm border-slate-200/90 bg-white/90 backdrop-blur-2xl">
             {/* Logo & Brand */}
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center text-black shadow-glass-glow font-black text-lg">
+              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#0066FF] to-sky-400 flex items-center justify-center text-white shadow-md shadow-blue-500/30 font-black text-lg">
                 <Dumbbell className="w-5 h-5 stroke-[2.5]" />
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-base font-black tracking-tight text-white">جیبی‌جیم</span>
-                  <span className="text-[10px] font-mono text-emerald-400 font-bold px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+                  <span className="text-base font-black tracking-tight text-slate-900">جیبی‌جیم</span>
+                  <span className="text-[10px] font-mono text-[#0066FF] font-bold px-1.5 py-0.5 rounded-md bg-blue-50 border border-blue-200">
                     JibiGym
                   </span>
                 </div>
-                <p className="text-[9px] text-slate-400">طراحی شیشه‌ای مایع • استانداردهای Apple HIG</p>
+                <p className="text-[9px] text-slate-500">تم سفید و آبی ورزشی • استانداردهای Apple HIG</p>
               </div>
             </div>
 
             {/* Quick Panel Switcher (All 4 Panels accessible for Pair Programming review) */}
-            <div className="hidden sm:flex items-center gap-1 bg-black/50 p-1 rounded-2xl border border-white/10 text-xs">
+            <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs">
               <button
                 onClick={() => handleRoleChange('coach')}
                 className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer font-medium ${
                   activeRole === 'coach'
-                    ? 'bg-emerald-500 text-black font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0066FF] text-white font-bold shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 پنل مربی
@@ -144,8 +144,8 @@ export function App() {
                 onClick={() => handleRoleChange('athlete')}
                 className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer font-medium ${
                   activeRole === 'athlete'
-                    ? 'bg-cyan-500 text-black font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0066FF] text-white font-bold shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 پنل ورزشکار
@@ -154,8 +154,8 @@ export function App() {
                 onClick={() => handleRoleChange('gym_owner')}
                 className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer font-medium ${
                   activeRole === 'gym_owner'
-                    ? 'bg-orange-500 text-black font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0066FF] text-white font-bold shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 پنل باشگاه
@@ -164,8 +164,8 @@ export function App() {
                 onClick={() => handleRoleChange('admin')}
                 className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer font-medium ${
                   activeRole === 'admin'
-                    ? 'bg-purple-500 text-black font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-[#0066FF] text-white font-bold shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 پنل ادمین
@@ -178,7 +178,7 @@ export function App() {
                 variant="glass"
                 size="sm"
                 onClick={() => setIsAuthModalOpen(true)}
-                icon={<UserCheck className="w-3.5 h-3.5 text-emerald-400" />}
+                icon={<UserCheck className="w-3.5 h-3.5 text-[#0066FF]" />}
               >
                 ورود / تغییر نقش
               </GlassButton>
@@ -186,11 +186,11 @@ export function App() {
           </GlassCard>
 
           {/* Mobile Role Switcher Pill Bar */}
-          <div className="sm:hidden grid grid-cols-4 gap-1 mt-2 bg-black/40 p-1 rounded-2xl border border-white/10 text-[11px] text-center">
+          <div className="sm:hidden grid grid-cols-4 gap-1 mt-2 bg-slate-200/80 p-1 rounded-2xl border border-slate-300/80 text-[11px] text-center">
             <button
               onClick={() => handleRoleChange('coach')}
               className={`py-1.5 rounded-xl transition-colors font-medium ${
-                activeRole === 'coach' ? 'bg-emerald-500 text-black font-bold' : 'text-slate-400'
+                activeRole === 'coach' ? 'bg-[#0066FF] text-white font-bold shadow-sm' : 'text-slate-600'
               }`}
             >
               مربی
@@ -198,7 +198,7 @@ export function App() {
             <button
               onClick={() => handleRoleChange('athlete')}
               className={`py-1.5 rounded-xl transition-colors font-medium ${
-                activeRole === 'athlete' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400'
+                activeRole === 'athlete' ? 'bg-[#0066FF] text-white font-bold shadow-sm' : 'text-slate-600'
               }`}
             >
               ورزشکار
@@ -206,7 +206,7 @@ export function App() {
             <button
               onClick={() => handleRoleChange('gym_owner')}
               className={`py-1.5 rounded-xl transition-colors font-medium ${
-                activeRole === 'gym_owner' ? 'bg-orange-500 text-black font-bold' : 'text-slate-400'
+                activeRole === 'gym_owner' ? 'bg-[#0066FF] text-white font-bold shadow-sm' : 'text-slate-600'
               }`}
             >
               باشگاه
@@ -214,7 +214,7 @@ export function App() {
             <button
               onClick={() => handleRoleChange('admin')}
               className={`py-1.5 rounded-xl transition-colors font-medium ${
-                activeRole === 'admin' ? 'bg-purple-500 text-black font-bold' : 'text-slate-400'
+                activeRole === 'admin' ? 'bg-[#0066FF] text-white font-bold shadow-sm' : 'text-slate-600'
               }`}
             >
               ادمین
@@ -273,11 +273,11 @@ export function App() {
 
         {/* Modals */}
         {isAuthModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
             <div className="relative w-full max-w-md">
               <button
                 onClick={() => setIsAuthModalOpen(false)}
-                className="absolute top-4 left-4 z-20 text-slate-400 hover:text-white"
+                className="absolute top-4 left-4 z-20 text-slate-400 hover:text-slate-800"
               >
                 ✕
               </button>

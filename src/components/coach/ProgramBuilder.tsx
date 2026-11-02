@@ -85,7 +85,7 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
             variant="primary"
             size="md"
             onClick={handleSaveProgram}
-            icon={savedSuccess ? <CheckCircle2 className="w-4 h-4 text-black" /> : <Save className="w-4 h-4" />}
+            icon={savedSuccess ? <CheckCircle2 className="w-4 h-4 text-white" /> : <Save className="w-4 h-4" />}
           >
             {savedSuccess ? 'برنامه ذخیره شد' : 'ذخیره و ثبت نهایی'}
           </GlassButton>
@@ -100,19 +100,19 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="مثال: دوره افزایش حجم و تفکیک عضلانی"
-            className="text-base font-bold"
+            className="text-base font-bold text-slate-900"
           />
-          <div className="flex flex-wrap items-center justify-between text-xs text-slate-300 pt-1">
-            <span>تعداد جلسات در هفته: <strong className="text-white">۴ جلسه</strong></span>
-            <span>مدت دوره: <strong className="text-emerald-400 font-mono">۴ هفته</strong></span>
-            <span>نوع برنامه: <strong className="text-cyan-400">هایپرتروفی و قدرت</strong></span>
+          <div className="flex flex-wrap items-center justify-between text-xs text-slate-600 pt-1">
+            <span>تعداد جلسات در هفته: <strong className="text-slate-900">۴ جلسه</strong></span>
+            <span>مدت دوره: <strong className="text-[#0066FF] font-mono font-bold">۴ هفته</strong></span>
+            <span>نوع برنامه: <strong className="text-sky-600 font-bold">هایپرتروفی و قدرت</strong></span>
           </div>
         </div>
       </GlassCard>
 
       {/* Days Tabs (Segmented Control) */}
       <div className="space-y-2">
-        <span className="text-xs font-semibold text-slate-300 block">انتخاب روز تمرینی:</span>
+        <span className="text-xs font-bold text-slate-700 block">انتخاب روز تمرینی:</span>
         <SegmentedControl
           value={activeDayIndex}
           onChange={(val) => setActiveDayIndex(Number(val))}
@@ -128,8 +128,8 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-white">{activeDay.title}</h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <h3 className="text-base font-bold text-slate-900">{activeDay.title}</h3>
+            <p className="text-xs text-slate-500 mt-0.5">
               {activeDay.movements.length} حرکت ورزشی برای این روز تنظیم شده است
             </p>
           </div>
@@ -145,9 +145,9 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
 
         {/* Movements Roster */}
         {activeDay.movements.length === 0 ? (
-          <GlassCard className="p-8 text-center border-dashed border-white/20">
-            <Dumbbell className="w-10 h-10 mx-auto text-slate-500 mb-2" />
-            <p className="text-sm font-medium text-slate-300">هنوز حرکتی برای این روز انتخاب نشده است</p>
+          <GlassCard className="p-8 text-center border-dashed border-slate-300">
+            <Dumbbell className="w-10 h-10 mx-auto text-slate-400 mb-2" />
+            <p className="text-sm font-bold text-slate-700">هنوز حرکتی برای این روز انتخاب نشده است</p>
             <p className="text-xs text-slate-500 mt-1 mb-4">از کتابخانه حرکات جیبی‌جیم حرکات مورد نظرتان را اضافه کنید</p>
             <GlassButton
               variant="primary"
@@ -164,22 +164,22 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
               <GlassCard key={pm.id} className="p-4 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center font-bold font-mono text-emerald-400 text-sm">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#0066FF] border border-blue-200 flex items-center justify-center font-bold font-mono text-sm">
                       {idx + 1}
                     </div>
                     {pm.movement.thumbnailUrl ? (
                       <img
                         src={pm.movement.thumbnailUrl}
                         alt={pm.movement.title}
-                        className="w-12 h-12 rounded-xl object-cover border border-white/10"
+                        className="w-12 h-12 rounded-xl object-cover border border-slate-200"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 border border-white/10">
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
                         <Dumbbell className="w-5 h-5" />
                       </div>
                     )}
                     <div>
-                      <h4 className="text-sm font-bold text-white">{pm.movement.title}</h4>
+                      <h4 className="text-sm font-bold text-slate-900">{pm.movement.title}</h4>
                       <p className="text-xs text-slate-400 font-mono mt-0.5">{pm.movement.titleEn}</p>
                       <GlassBadge variant="cyan" size="sm" className="mt-1">
                         {pm.movement.muscleGroup}
@@ -191,7 +191,7 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
                   <div className="flex items-center gap-2 self-end sm:self-center">
                     <button
                       onClick={() => handleRemoveMovement(pm.id)}
-                      className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+                      className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-colors border border-red-200"
                       title="حذف از روز"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -200,27 +200,27 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
                 </div>
 
                 {/* Workout Execution Parameters Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-white/10 text-xs">
-                  <div className="p-2 rounded-xl bg-white/5 text-right">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
+                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 text-right">
                     <span className="text-[10px] text-slate-400 block">ست‌ها:</span>
-                    <span className="font-bold text-white font-mono">{pm.sets} ست</span>
+                    <span className="font-bold text-slate-800 font-mono">{pm.sets} ست</span>
                   </div>
-                  <div className="p-2 rounded-xl bg-white/5 text-right">
+                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 text-right">
                     <span className="text-[10px] text-slate-400 block">تکرارها:</span>
-                    <span className="font-bold text-white font-mono">{pm.reps}</span>
+                    <span className="font-bold text-slate-800 font-mono">{pm.reps}</span>
                   </div>
-                  <div className="p-2 rounded-xl bg-white/5 text-right">
+                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 text-right">
                     <span className="text-[10px] text-slate-400 block">استراحت:</span>
-                    <span className="font-bold text-emerald-400 font-mono">{pm.restSeconds} ثانیه</span>
+                    <span className="font-bold text-[#0066FF] font-mono">{pm.restSeconds} ثانیه</span>
                   </div>
-                  <div className="p-2 rounded-xl bg-white/5 text-right">
+                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-100 text-right">
                     <span className="text-[10px] text-slate-400 block">تمپو اجرای تکرار:</span>
-                    <span className="font-bold text-cyan-400 font-mono">{pm.tempo || '2-0-1'}</span>
+                    <span className="font-bold text-sky-600 font-mono">{pm.tempo || '2-0-1'}</span>
                   </div>
                 </div>
 
                 {pm.coachNote && (
-                  <div className="mt-2 text-[11px] text-slate-300 bg-emerald-500/10 p-2 rounded-xl border border-emerald-500/20">
+                  <div className="mt-2 text-[11px] text-blue-900 bg-blue-50/80 p-2 rounded-xl border border-blue-200">
                     💡 <strong>توصیه مربی:</strong> {pm.coachNote}
                   </div>
                 )}
@@ -245,8 +245,8 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
                 onClick={() => setSelectedMuscle(group)}
                 className={`text-xs px-3 py-1.5 rounded-xl border whitespace-nowrap transition-colors ${
                   selectedMuscle === group
-                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                    ? 'bg-blue-50 border-[#0066FF] text-[#0066FF] font-bold shadow-sm'
+                    : 'bg-white border-slate-200 text-slate-600 hover:text-black'
                 }`}
               >
                 {group}
@@ -260,10 +260,10 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
               <div
                 key={movement.id}
                 onClick={() => handleAddMovementToDay(movement)}
-                className="p-3 rounded-2xl liquid-glass hover:border-emerald-400/50 cursor-pointer transition-all flex items-center justify-between"
+                className="p-3 rounded-2xl bg-white border border-slate-200/90 hover:border-blue-400 cursor-pointer transition-all flex items-center justify-between shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/40 shrink-0 border border-white/10">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
                     {movement.thumbnailUrl ? (
                       <img
                         src={movement.thumbnailUrl}
@@ -271,24 +271,24 @@ export const ProgramBuilder: React.FC<ProgramBuilderProps> = ({ onBack }) => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-500">
+                      <div className="w-full h-full flex items-center justify-center text-slate-400">
                         <Video className="w-5 h-5" />
                       </div>
                     )}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white">{movement.title}</h4>
-                    <p className="text-[11px] text-slate-400 font-mono mt-0.5">{movement.titleEn}</p>
+                    <h4 className="text-sm font-bold text-slate-900">{movement.title}</h4>
+                    <p className="text-[11px] text-slate-500 font-mono mt-0.5">{movement.titleEn}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] text-emerald-400">{movement.muscleGroup}</span>
+                      <span className="text-[10px] text-[#0066FF] font-semibold">{movement.muscleGroup}</span>
                       {movement.equipment && (
-                        <span className="text-[10px] text-slate-500">• {movement.equipment}</span>
+                        <span className="text-[10px] text-slate-400">• {movement.equipment}</span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <GlassButton variant="glass" size="sm" icon={<Plus className="w-3.5 h-3.5" />}>
+                <GlassButton variant="glass" size="sm" icon={<Plus className="w-3.5 h-3.5 text-[#0066FF]" />}>
                   انتخاب
                 </GlassButton>
               </div>

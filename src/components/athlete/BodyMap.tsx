@@ -40,14 +40,14 @@ export const BodyMap: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-4 text-right">
+    <div className="space-y-4 pb-24 text-right">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-orange-400" />
+          <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-orange-500" />
             نقشه تعاملی آسیب‌دیدگی‌های بدن (Body Map)
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             مربی هنگام نوشتن برنامه این نواحی را می‌بیند تا حرکات آسیب‌رسان را جایگزین کند.
           </p>
         </div>
@@ -57,36 +57,36 @@ export const BodyMap: React.FC = () => {
         {/* Interactive Visual Anatomy Canvas */}
         <GlassCard className="p-4 flex flex-col items-center justify-center relative min-h-[340px]">
           {/* Front / Back Toggle */}
-          <div className="absolute top-3 right-3 flex gap-1 bg-black/50 p-1 rounded-xl border border-white/10 z-10 text-xs">
+          <div className="absolute top-3 right-3 flex gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 z-10 text-xs">
             <button
               onClick={() => setActiveSide('front')}
-              className={`px-3 py-1 rounded-lg transition-colors ${
-                activeSide === 'front' ? 'bg-emerald-500 text-black font-bold' : 'text-slate-400'
+              className={`px-3 py-1 rounded-lg transition-colors font-bold ${
+                activeSide === 'front' ? 'bg-[#0066FF] text-white shadow-sm' : 'text-slate-600'
               }`}
             >
               نمای جلو
             </button>
             <button
               onClick={() => setActiveSide('back')}
-              className={`px-3 py-1 rounded-lg transition-colors ${
-                activeSide === 'back' ? 'bg-emerald-500 text-black font-bold' : 'text-slate-400'
+              className={`px-3 py-1 rounded-lg transition-colors font-bold ${
+                activeSide === 'back' ? 'bg-[#0066FF] text-white shadow-sm' : 'text-slate-600'
               }`}
             >
               نمای پشت
             </button>
           </div>
 
-          {/* Stylized Futuristic Body Wireframe */}
-          <div className="relative w-48 h-72 border border-white/10 rounded-3xl bg-black/40 flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent pointer-events-none" />
+          {/* Stylized Body Wireframe (Light Edition) */}
+          <div className="relative w-48 h-72 border border-blue-200/80 rounded-3xl bg-blue-50/40 flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent pointer-events-none" />
 
             {/* Silhouette Representation */}
-            <div className="w-24 h-56 border-2 border-emerald-400/30 rounded-full opacity-60 flex flex-col items-center pt-2">
-              <div className="w-8 h-10 border border-emerald-400/50 rounded-full mb-1" />
-              <div className="w-16 h-20 border border-emerald-400/40 rounded-2xl mb-1" />
+            <div className="w-24 h-56 border-2 border-blue-400/40 rounded-full opacity-70 flex flex-col items-center pt-2">
+              <div className="w-8 h-10 border border-blue-400/60 rounded-full mb-1" />
+              <div className="w-16 h-20 border border-blue-400/50 rounded-2xl mb-1" />
               <div className="flex gap-2">
-                <div className="w-6 h-24 border border-emerald-400/30 rounded-lg" />
-                <div className="w-6 h-24 border border-emerald-400/30 rounded-lg" />
+                <div className="w-6 h-24 border border-blue-400/40 rounded-lg" />
+                <div className="w-6 h-24 border border-blue-400/40 rounded-lg" />
               </div>
             </div>
 
@@ -101,19 +101,19 @@ export const BodyMap: React.FC = () => {
                   className={`absolute -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border transition-transform hover:scale-125 cursor-pointer flex items-center justify-center ${
                     hasInjury
                       ? 'bg-red-500 border-red-300 shadow-lg shadow-red-500/50 animate-pulse'
-                      : 'bg-white/20 border-white/40 hover:bg-emerald-400 hover:border-emerald-300'
+                      : 'bg-white border-blue-400 hover:bg-blue-600 hover:border-blue-700 shadow-sm'
                   }`}
                   title={part.name}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                  <span className={`w-1.5 h-1.5 rounded-full ${hasInjury ? 'bg-white' : 'bg-[#0066FF]'}`} />
                 </button>
               );
             })}
           </div>
 
           {selectedPart && (
-            <div className="mt-3 text-xs text-center text-slate-300 bg-white/5 py-1.5 px-3 rounded-xl border border-white/10">
-              ناحیه انتخاب‌شده: <strong className="text-emerald-400">{selectedPart}</strong>
+            <div className="mt-3 text-xs text-center text-slate-700 bg-blue-50/80 py-1.5 px-3 rounded-xl border border-blue-200 font-medium">
+              ناحیه انتخاب‌شده: <strong className="text-[#0066FF]">{selectedPart}</strong>
             </div>
           )}
         </GlassCard>
@@ -121,11 +121,11 @@ export const BodyMap: React.FC = () => {
         {/* Reported Injuries List */}
         <div className="space-y-2">
           {injuries.map((inj) => (
-            <GlassCard key={inj.id} className="p-3.5 border-orange-500/30">
+            <GlassCard key={inj.id} className="p-3.5 border-orange-200 bg-orange-50/20">
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-orange-400" />
-                  <h4 className="text-xs font-bold text-white">
+                  <AlertCircle className="w-4 h-4 text-orange-500" />
+                  <h4 className="text-xs font-bold text-slate-900">
                     {inj.part} ({inj.side})
                   </h4>
                 </div>
@@ -136,7 +136,7 @@ export const BodyMap: React.FC = () => {
                   شدت: {inj.severity}
                 </GlassBadge>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">{inj.note}</p>
+              <p className="text-xs text-slate-600 leading-relaxed">{inj.note}</p>
             </GlassCard>
           ))}
 
@@ -144,7 +144,7 @@ export const BodyMap: React.FC = () => {
             variant="glass"
             size="md"
             fullWidth
-            icon={<Plus className="w-4 h-4" />}
+            icon={<Plus className="w-4 h-4 text-[#0066FF]" />}
             onClick={() => {
               if (selectedPart) {
                 setInjuries([

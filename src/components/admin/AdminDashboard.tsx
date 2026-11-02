@@ -6,7 +6,6 @@ import { MOCK_MOVEMENTS } from '../../data/mockData';
 import { Shield, Users, Check, X, AlertTriangle, Video, BarChart3, Building2, Dumbbell } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
-  // Pending exercise reviews
   const [reviewMovements, setReviewMovements] = useState(
     MOCK_MOVEMENTS.filter((m) => m.reviewState === 'submitted_for_review')
   );
@@ -32,8 +31,8 @@ export const AdminDashboard: React.FC = () => {
     <div className="space-y-6 pb-24 text-right">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 py-2.5 px-5 rounded-2xl liquid-glass border border-emerald-400 text-emerald-300 text-xs font-medium shadow-2xl flex items-center gap-2">
-          <Shield className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 py-2.5 px-5 rounded-2xl bg-white border border-blue-500 text-blue-700 text-xs font-bold shadow-2xl flex items-center gap-2">
+          <Shield className="w-4 h-4 text-[#0066FF]" />
           <span>{toast}</span>
         </div>
       )}
@@ -43,14 +42,14 @@ export const AdminDashboard: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-black text-white">داشبورد ادمین و مدیریت پلتفرم</h1>
-              <GlassBadge variant="purple" size="sm">
+              <h1 className="text-base font-black text-slate-900">داشبورد ادمین و مدیریت پلتفرم</h1>
+              <GlassBadge variant="blue" size="sm">
                 سوپر ادمین
               </GlassBadge>
             </div>
-            <p className="text-xs text-slate-300 mt-1">نظارت بر کیفیت حرکات ورزشی، تراکنش‌ها و کاربران پلتفرم جیبی‌جیم</p>
+            <p className="text-xs text-slate-600 mt-1">نظارت بر کیفیت حرکات ورزشی، تراکنش‌ها و کاربران پلتفرم جیبی‌جیم</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/30">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#0066FF] flex items-center justify-center border border-blue-200">
             <Shield className="w-6 h-6" />
           </div>
         </div>
@@ -59,56 +58,56 @@ export const AdminDashboard: React.FC = () => {
       {/* System Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <GlassCard className="p-4 text-right">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium">مربیان ثبت‌شده</span>
-            <Users className="w-4 h-4 text-cyan-400" />
+          <div className="flex items-center justify-between text-slate-500 mb-2">
+            <span className="text-xs font-semibold">مربیان ثبت‌شده</span>
+            <Users className="w-4 h-4 text-[#0066FF]" />
           </div>
-          <div className="text-xl font-black text-white font-mono">۱۲۴</div>
-          <span className="text-[10px] text-cyan-300">۱۴ درخواست در انتظار احراز</span>
+          <div className="text-xl font-black text-slate-900 font-mono">۱۲۴</div>
+          <span className="text-[10px] text-blue-600 font-bold">۱۴ درخواست در انتظار احراز</span>
         </GlassCard>
 
         <GlassCard className="p-4 text-right">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium">ورزشکاران فعال</span>
-            <Dumbbell className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center justify-between text-slate-500 mb-2">
+            <span className="text-xs font-semibold">ورزشکاران فعال</span>
+            <Dumbbell className="w-4 h-4 text-sky-600" />
           </div>
-          <div className="text-xl font-black text-white font-mono">۱,۸۵۰</div>
-          <span className="text-[10px] text-emerald-400">رشد ۱۸٪ نسبت به ماه گذشته</span>
+          <div className="text-xl font-black text-slate-900 font-mono">۱,۸۵۰</div>
+          <span className="text-[10px] text-sky-600 font-bold">رشد ۱۸٪ نسبت به ماه گذشته</span>
         </GlassCard>
 
         <GlassCard className="p-4 text-right">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium">باشگاه‌های همکار</span>
-            <Building2 className="w-4 h-4 text-orange-400" />
+          <div className="flex items-center justify-between text-slate-500 mb-2">
+            <span className="text-xs font-semibold">باشگاه‌های همکار</span>
+            <Building2 className="w-4 h-4 text-orange-500" />
           </div>
-          <div className="text-xl font-black text-white font-mono">۴۲</div>
-          <span className="text-[10px] text-slate-400">در سراسر تهران و مراکز استان</span>
+          <div className="text-xl font-black text-slate-900 font-mono">۴۲</div>
+          <span className="text-[10px] text-slate-500">در سراسر تهران و مراکز استان</span>
         </GlassCard>
 
         <GlassCard className="p-4 text-right">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium">نرخ موفقیت درگاه</span>
-            <BarChart3 className="w-4 h-4 text-purple-400" />
+          <div className="flex items-center justify-between text-slate-500 mb-2">
+            <span className="text-xs font-semibold">نرخ موفقیت درگاه</span>
+            <BarChart3 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-xl font-black text-white font-mono">۹۸.۴٪</div>
-          <span className="text-[10px] text-purple-300">زرین‌پال / بدون تراکنش معلق</span>
+          <div className="text-xl font-black text-slate-900 font-mono">۹۸.۴٪</div>
+          <span className="text-[10px] text-emerald-600 font-bold">زرین‌پال / بدون تراکنش معلق</span>
         </GlassCard>
       </div>
 
       {/* Exercise Review Queue (UC-10) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#0066FF] animate-pulse" />
             صف بررسی و تأیید حرکات پیشنهادی مربیان ({reviewMovements.length})
           </h2>
-          <span className="text-xs text-cyan-400">ارتقا به کتابخانه عمومی</span>
+          <span className="text-xs text-[#0066FF] font-bold">ارتقا به کتابخانه عمومی</span>
         </div>
 
         {reviewMovements.length === 0 ? (
           <GlassCard className="p-6 text-center">
-            <Check className="w-8 h-8 mx-auto text-emerald-400 mb-2" />
-            <p className="text-sm text-slate-300 font-bold">تمام حرکات ارسالی بررسی شده‌اند</p>
+            <Check className="w-8 h-8 mx-auto text-[#0066FF] mb-2" />
+            <p className="text-sm text-slate-800 font-bold">تمام حرکات ارسالی بررسی شده‌اند</p>
             <p className="text-xs text-slate-500 mt-1">حرکت جدیدی در صف انتظار نیست</p>
           </GlassCard>
         ) : (
@@ -117,24 +116,24 @@ export const AdminDashboard: React.FC = () => {
               <GlassCard key={movement.id} className="p-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/40 border border-white/10 shrink-0">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-900 border border-slate-200 shrink-0">
                       {movement.thumbnailUrl ? (
                         <img src={movement.thumbnailUrl} alt={movement.title} className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-500">
+                        <div className="w-full h-full flex items-center justify-center text-slate-400">
                           <Video className="w-5 h-5" />
                         </div>
                       )}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-white">{movement.title}</h4>
-                        <GlassBadge variant="cyan" size="sm">
+                        <h4 className="text-sm font-bold text-slate-900">{movement.title}</h4>
+                        <GlassBadge variant="blue" size="sm">
                           {movement.muscleGroup}
                         </GlassBadge>
                       </div>
-                      <p className="text-xs text-slate-400 mt-0.5">{movement.description}</p>
-                      <span className="text-[10px] text-slate-500 font-mono mt-1 block">
+                      <p className="text-xs text-slate-500 mt-0.5">{movement.description}</p>
+                      <span className="text-[10px] text-slate-400 font-mono mt-1 block">
                         پیشنهاد شده توسط مربی: استاد علی رضایی
                       </span>
                     </div>
@@ -168,49 +167,49 @@ export const AdminDashboard: React.FC = () => {
       {/* User Moderation Section (UC-24) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white">کاربران اخیر پلتفرم و وضعیت دسترسی</h2>
-          <span className="text-xs text-slate-400">مدیریت کاربران (UC-24)</span>
+          <h2 className="text-sm font-bold text-slate-900">کاربران اخیر پلتفرم و وضعیت دسترسی</h2>
+          <span className="text-xs text-slate-500">مدیریت کاربران (UC-24)</span>
         </div>
 
-        <GlassCard className="p-4 divide-y divide-white/10">
+        <GlassCard className="p-4 divide-y divide-slate-100">
           <div className="py-2.5 flex items-center justify-between first:pt-0">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#0066FF] border border-blue-200 flex items-center justify-center font-bold text-xs">
                 ع‌ر
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">علی رضایی (مربی ارشد)</h4>
-                <span className="text-[10px] text-slate-400 font-mono">09121234567 • ۱۸ شاگرد فعال</span>
+                <h4 className="text-xs font-bold text-slate-900">علی رضایی (مربی ارشد)</h4>
+                <span className="text-[10px] text-slate-500 font-mono">09121234567 • ۱۸ شاگرد فعال</span>
               </div>
             </div>
-            <GlassBadge variant="emerald" size="sm" dot>
+            <GlassBadge variant="blue" size="sm" dot>
               فعال
             </GlassBadge>
           </div>
 
           <div className="py-2.5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs">
+              <div className="w-9 h-9 rounded-xl bg-sky-50 text-sky-700 border border-sky-200 flex items-center justify-center font-bold text-xs">
                 م‌یا
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">محمدجواد یزدانی (ورزشکار)</h4>
-                <span className="text-[10px] text-slate-400 font-mono">09351234567 • متصل به علی رضایی</span>
+                <h4 className="text-xs font-bold text-slate-900">محمدجواد یزدانی (ورزشکار)</h4>
+                <span className="text-[10px] text-slate-500 font-mono">09351234567 • متصل به علی رضایی</span>
               </div>
             </div>
-            <GlassBadge variant="emerald" size="sm" dot>
+            <GlassBadge variant="blue" size="sm" dot>
               فعال
             </GlassBadge>
           </div>
 
           <div className="py-2.5 flex items-center justify-between last:pb-0">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center font-bold text-xs">
+              <div className="w-9 h-9 rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center font-bold text-xs">
                 ک‌م
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white">کاربر مشکوک (مربی نامعتبر)</h4>
-                <span className="text-[10px] text-slate-400 font-mono">09990001122 • نقض قوانین</span>
+                <h4 className="text-xs font-bold text-slate-900">کاربر مشکوک (مربی نامعتبر)</h4>
+                <span className="text-[10px] text-slate-500 font-mono">09990001122 • نقض قوانین</span>
               </div>
             </div>
             <GlassBadge variant="orange" size="sm">

@@ -42,11 +42,11 @@ export const ExerciseLibraryView: React.FC<ExerciseLibraryViewProps> = ({
       <GlassCard className="p-4" variant="highlight">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <Dumbbell className="w-4 h-4 text-emerald-400" />
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Dumbbell className="w-4 h-4 text-[#0066FF]" />
               کتابخانه جامع حرکات و تمرینات ورزشی
             </h2>
-            <GlassBadge variant="emerald" size="sm">
+            <GlassBadge variant="blue" size="sm">
               {filtered.length} حرکت فعال
             </GlassBadge>
           </div>
@@ -55,7 +55,7 @@ export const ExerciseLibraryView: React.FC<ExerciseLibraryViewProps> = ({
             placeholder="جستجوی نام حرکت به فارسی یا انگلیسی (مثال: پرس سینه، Bench Press)"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            icon={<Search className="w-4 h-4" />}
+            icon={<Search className="w-4 h-4 text-slate-400" />}
           />
 
           {/* Muscle Filters */}
@@ -64,10 +64,10 @@ export const ExerciseLibraryView: React.FC<ExerciseLibraryViewProps> = ({
               <button
                 key={group}
                 onClick={() => setSelectedMuscle(group)}
-                className={`text-xs px-3 py-1.5 rounded-xl border whitespace-nowrap transition-colors ${
+                className={`text-xs px-3 py-1.5 rounded-xl border whitespace-nowrap transition-colors font-medium ${
                   selectedMuscle === group
-                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 font-bold'
-                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                    ? 'bg-blue-50 border-[#0066FF] text-[#0066FF] font-bold shadow-sm'
+                    : 'bg-white border-slate-200 text-slate-600 hover:text-black'
                 }`}
               >
                 {group}
@@ -87,7 +87,7 @@ export const ExerciseLibraryView: React.FC<ExerciseLibraryViewProps> = ({
             className="p-3.5 flex flex-col justify-between"
           >
             <div>
-              <div className="relative aspect-video rounded-xl overflow-hidden mb-2.5 bg-black/40 border border-white/10 group">
+              <div className="relative aspect-video rounded-xl overflow-hidden mb-2.5 bg-slate-900 border border-slate-200 group">
                 {movement.thumbnailUrl ? (
                   <img
                     src={movement.thumbnailUrl}
@@ -95,26 +95,26 @@ export const ExerciseLibraryView: React.FC<ExerciseLibraryViewProps> = ({
                     className="w-full h-full object-cover transition-transform group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-500">
+                  <div className="w-full h-full flex items-center justify-center text-slate-400">
                     <Video className="w-8 h-8" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/80 backdrop-blur-md flex items-center justify-center text-black shadow-lg">
-                    <Play className="w-4 h-4 fill-black translate-x-[-1px]" />
+                <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/10 transition-colors flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full bg-[#0066FF]/90 backdrop-blur-md flex items-center justify-center text-white shadow-lg">
+                    <Play className="w-4 h-4 fill-white translate-x-[-1px]" />
                   </div>
                 </div>
               </div>
 
-              <h3 className="text-xs font-bold text-white line-clamp-1">{movement.title}</h3>
-              <p className="text-[10px] text-slate-400 font-mono mt-0.5 line-clamp-1">{movement.titleEn}</p>
+              <h3 className="text-xs font-bold text-slate-900 line-clamp-1">{movement.title}</h3>
+              <p className="text-[10px] text-slate-500 font-mono mt-0.5 line-clamp-1">{movement.titleEn}</p>
             </div>
 
-            <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/10 text-[11px]">
-              <span className="text-emerald-400 font-medium truncate max-w-[140px]">
+            <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100 text-[11px]">
+              <span className="text-[#0066FF] font-bold truncate max-w-[140px]">
                 {movement.muscleGroup}
               </span>
-              <span className="text-slate-400 text-[10px]">{movement.equipment || 'وزن بدن'}</span>
+              <span className="text-slate-500 text-[10px]">{movement.equipment || 'وزن بدن'}</span>
             </div>
           </GlassCard>
         ))}

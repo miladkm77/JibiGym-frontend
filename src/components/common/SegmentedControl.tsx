@@ -22,7 +22,7 @@ export function SegmentedControl<T extends string | number>({
 }: SegmentedControlProps<T>) {
   return (
     <div
-      className={`relative p-1 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 flex items-center justify-between ${className}`}
+      className={`relative p-1 rounded-2xl bg-slate-200/70 border border-slate-200/90 flex items-center justify-between ${className}`}
     >
       {options.map((option) => {
         const isSelected = option.value === value;
@@ -33,19 +33,19 @@ export function SegmentedControl<T extends string | number>({
             onClick={() => onChange(option.value)}
             className={`relative flex-1 py-2 px-3 text-xs md:text-sm font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer z-10 ${
               isSelected
-                ? 'text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200 active:text-white'
+                ? 'text-[#0066FF] font-bold'
+                : 'text-slate-600 hover:text-slate-800 active:text-black'
             }`}
           >
             {isSelected && (
-              <span className="absolute inset-0 bg-white/15 backdrop-blur-lg border border-white/20 rounded-xl shadow-glass -z-10 animate-fade-in" />
+              <span className="absolute inset-0 bg-white rounded-xl shadow-sm border border-slate-200/60 -z-10" />
             )}
             {option.icon && <span className="shrink-0">{option.icon}</span>}
             <span className="truncate">{option.label}</span>
             {option.badge !== undefined && (
               <span
                 className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isSelected ? 'bg-emerald-500 text-black' : 'bg-white/10 text-slate-300'
+                  isSelected ? 'bg-blue-600 text-white font-bold' : 'bg-slate-300 text-slate-700'
                 }`}
               >
                 {option.badge}

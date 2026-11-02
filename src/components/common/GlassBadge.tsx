@@ -2,7 +2,7 @@ import React from 'react';
 
 interface GlassBadgeProps {
   children: React.ReactNode;
-  variant?: 'emerald' | 'cyan' | 'orange' | 'purple' | 'slate';
+  variant?: 'blue' | 'cyan' | 'emerald' | 'orange' | 'purple' | 'slate';
   size?: 'sm' | 'md';
   className?: string;
   dot?: boolean;
@@ -10,35 +10,37 @@ interface GlassBadgeProps {
 
 export const GlassBadge: React.FC<GlassBadgeProps> = ({
   children,
-  variant = 'emerald',
+  variant = 'blue',
   size = 'md',
   className = '',
   dot = false,
 }) => {
   const variantStyles = {
-    emerald: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-    cyan: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
-    orange: 'bg-orange-500/15 text-orange-300 border-orange-500/30',
-    purple: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
-    slate: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
+    blue: 'bg-blue-50 text-blue-700 border-blue-200/90 shadow-sm shadow-blue-500/5',
+    cyan: 'bg-sky-50 text-sky-700 border-sky-200/90 shadow-sm shadow-sky-500/5',
+    emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200/90 shadow-sm shadow-emerald-500/5',
+    orange: 'bg-orange-50 text-orange-700 border-orange-200/90 shadow-sm shadow-orange-500/5',
+    purple: 'bg-purple-50 text-purple-700 border-purple-200/90 shadow-sm shadow-purple-500/5',
+    slate: 'bg-slate-100 text-slate-700 border-slate-200 shadow-sm',
   }[variant];
 
   const dotColors = {
-    emerald: 'bg-emerald-400',
-    cyan: 'bg-cyan-400',
-    orange: 'bg-orange-400',
-    purple: 'bg-purple-400',
-    slate: 'bg-slate-400',
+    blue: 'bg-blue-600',
+    cyan: 'bg-sky-500',
+    emerald: 'bg-emerald-500',
+    orange: 'bg-orange-500',
+    purple: 'bg-purple-600',
+    slate: 'bg-slate-500',
   }[variant];
 
   const sizeStyles = {
-    sm: 'text-[11px] px-2 py-0.5 gap-1',
-    md: 'text-xs px-2.5 py-1 gap-1.5',
+    sm: 'text-[11px] px-2 py-0.5 gap-1 font-semibold',
+    md: 'text-xs px-2.5 py-1 gap-1.5 font-semibold',
   }[size];
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-medium border backdrop-blur-md ${variantStyles} ${sizeStyles} ${className}`}
+      className={`inline-flex items-center rounded-full border backdrop-blur-md ${variantStyles} ${sizeStyles} ${className}`}
     >
       {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotColors} animate-pulse`} />}
       <span>{children}</span>

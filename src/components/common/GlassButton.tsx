@@ -11,7 +11,7 @@ interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export const GlassButton: React.FC<GlassButtonProps> = ({
   children,
-  variant = 'glass',
+  variant = 'primary',
   size = 'md',
   fullWidth = false,
   icon,
@@ -28,15 +28,15 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
 
   const variantClasses = {
     primary:
-      'bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-black shadow-lg shadow-emerald-500/25 border border-emerald-400/50',
+      'bg-[#0066FF] hover:bg-[#0052CC] active:bg-[#0047B3] text-white shadow-lg shadow-blue-500/25 border border-blue-400/30',
     secondary:
-      'bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-600 text-black shadow-lg shadow-cyan-500/25 border border-cyan-400/50',
+      'bg-sky-500 hover:bg-sky-600 active:bg-sky-700 text-white shadow-md shadow-sky-500/20 border border-sky-400/30',
     glass:
-      'liquid-glass text-white hover:bg-white/10 active:bg-white/15 border-white/15 hover:border-white/30',
+      'bg-white/90 hover:bg-white active:bg-slate-50 text-slate-700 hover:text-blue-600 border border-slate-200/90 hover:border-blue-300 shadow-sm',
     danger:
-      'bg-red-500/20 text-red-200 hover:bg-red-500/30 active:bg-red-500/40 border border-red-500/30 shadow-lg shadow-red-500/10',
+      'bg-red-50 text-red-600 hover:bg-red-100 active:bg-red-200 border border-red-200 shadow-sm',
     ghost:
-      'bg-transparent text-slate-300 hover:text-white hover:bg-white/5 active:bg-white/10 border-transparent',
+      'bg-transparent text-slate-600 hover:text-blue-600 hover:bg-blue-50/60 active:bg-blue-100/60 border-transparent',
   }[variant];
 
   return (

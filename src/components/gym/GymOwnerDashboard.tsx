@@ -32,18 +32,18 @@ export const GymOwnerDashboard: React.FC = () => {
       <GlassCard className="p-5" variant="highlight">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/20 shadow-glass-glow shrink-0">
+            <div className="w-16 h-16 rounded-2xl overflow-hidden border border-slate-200 shadow-sm shrink-0">
               <img src={gym.avatarUrl} alt={gym.name} className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-black text-white">{gym.name}</h1>
-                <GlassBadge variant="emerald" size="sm">
+                <h1 className="text-base font-black text-slate-900">{gym.name}</h1>
+                <GlassBadge variant="blue" size="sm">
                   باشگاه تأییدشده
                 </GlassBadge>
               </div>
-              <p className="text-xs text-slate-300 flex items-center gap-1 mt-1">
-                <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <p className="text-xs text-slate-600 flex items-center gap-1 mt-1">
+                <MapPin className="w-3.5 h-3.5 text-[#0066FF] shrink-0" />
                 <span>{gym.address}</span>
               </p>
             </div>
@@ -60,21 +60,21 @@ export const GymOwnerDashboard: React.FC = () => {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
         <GlassCard className="p-4 text-right">
-          <span className="text-xs text-slate-400 block mb-1">مربیان فعال</span>
-          <div className="text-xl font-black text-white font-mono">{gym.coachesCount} نفر</div>
-          <span className="text-[10px] text-emerald-400">دارای قرارداد فعال</span>
+          <span className="text-xs text-slate-500 block mb-1">مربیان فعال</span>
+          <div className="text-xl font-black text-slate-900 font-mono">{gym.coachesCount} نفر</div>
+          <span className="text-[10px] text-[#0066FF] font-bold">دارای قرارداد فعال</span>
         </GlassCard>
 
         <GlassCard className="p-4 text-right">
-          <span className="text-xs text-slate-400 block mb-1">ورزشکاران عضو</span>
-          <div className="text-xl font-black text-cyan-400 font-mono">۲۴۰ نفر</div>
-          <span className="text-[10px] text-slate-400">سانس‌های اختصاصی</span>
+          <span className="text-xs text-slate-500 block mb-1">ورزشکاران عضو</span>
+          <div className="text-xl font-black text-sky-600 font-mono">۲۴۰ نفر</div>
+          <span className="text-[10px] text-slate-500">سانس‌های اختصاصی</span>
         </GlassCard>
 
         <GlassCard className="p-4 text-right">
-          <span className="text-xs text-slate-400 block mb-1">تجهیزات ثبت‌شده</span>
-          <div className="text-xl font-black text-purple-400 font-mono">{equipmentList.length} نوع</div>
-          <span className="text-[10px] text-purple-300">آماده تمرین</span>
+          <span className="text-xs text-slate-500 block mb-1">تجهیزات ثبت‌شده</span>
+          <div className="text-xl font-black text-purple-600 font-mono">{equipmentList.length} نوع</div>
+          <span className="text-[10px] text-purple-600 font-bold">آماده تمرین</span>
         </GlassCard>
       </div>
 
@@ -82,11 +82,11 @@ export const GymOwnerDashboard: React.FC = () => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <Dumbbell className="w-4 h-4 text-emerald-400" />
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <Dumbbell className="w-4 h-4 text-[#0066FF]" />
               مدیریت و پایش دستگاه‌ها و تجهیزات باشگاه
             </h2>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-slate-500 mt-0.5">
               وضعیت تجهیزات مستقیماً در حرکات مجاز برای مربیان این باشگاه اثر می‌گذارد.
             </p>
           </div>
@@ -99,27 +99,27 @@ export const GymOwnerDashboard: React.FC = () => {
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                     item.status === 'active'
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                      ? 'bg-blue-50 text-[#0066FF] border border-blue-200'
+                      : 'bg-orange-50 text-orange-600 border border-orange-200'
                   }`}
                 >
                   {item.status === 'active' ? <Check className="w-4 h-4" /> : <Wrench className="w-4 h-4" />}
                 </div>
 
                 <div className="text-right">
-                  <h4 className="text-xs font-bold text-white">{item.name}</h4>
+                  <h4 className="text-xs font-bold text-slate-900">{item.name}</h4>
                   <span className="text-[10px] text-slate-400 font-mono">تعداد: {item.count} دستگاه</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <GlassBadge variant={item.status === 'active' ? 'emerald' : 'orange'} size="sm">
+                <GlassBadge variant={item.status === 'active' ? 'blue' : 'orange'} size="sm">
                   {item.status === 'active' ? 'آماده استفاده' : 'نیاز به سرویس'}
                 </GlassBadge>
 
                 <button
                   onClick={() => toggleEquipmentStatus(item.id)}
-                  className="text-xs px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
+                  className="text-xs px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-black transition-colors border border-slate-200"
                 >
                   تغییر وضعیت
                 </button>

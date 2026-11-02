@@ -19,9 +19,9 @@ export const GlassCard: React.FC<GlassCardProps> = ({
       case 'highlight':
         return 'liquid-glass-highlight';
       case 'surface':
-        return 'bg-white/[0.03] backdrop-blur-md border border-white/5';
+        return 'bg-white/70 backdrop-blur-md border border-slate-200/80 shadow-sm';
       case 'glow':
-        return 'liquid-glass shadow-glass-glow border-emerald-500/30';
+        return 'liquid-glass shadow-glass-blue border-blue-500/30';
       default:
         return 'liquid-glass-card';
     }
@@ -30,12 +30,14 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   return (
     <div
       className={`rounded-2xl transition-all duration-300 relative overflow-hidden ${getVariantStyles()} ${
-        interactive ? 'cursor-pointer hover:border-white/25 hover:translate-y-[-2px] active:translate-y-[0px] active:scale-[0.99]' : ''
+        interactive
+          ? 'cursor-pointer hover:border-blue-400/50 hover:shadow-md hover:translate-y-[-2px] active:translate-y-[0px] active:scale-[0.99]'
+          : ''
       } ${className}`}
       {...props}
     >
       {/* Specular rim highlight gradient at top edge */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/90 to-transparent pointer-events-none" />
       {children}
     </div>
   );
