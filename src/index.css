@@ -8,96 +8,96 @@
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.6);
+  background: rgba(241, 245, 249, 0.5);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
+  background: rgba(148, 163, 184, 0.3);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.5);
+  background: rgba(100, 116, 139, 0.45);
 }
 
-/* Liquid Glass Primitives — White & Athletic Blue Edition */
+/* Apple HIG Liquid Glass Primitives — Subtle Shadows & Crisp Borders */
 .liquid-glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 10px 30px -5px rgba(0, 102, 255, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03), inset 0 1px 0 0 rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02);
 }
 
 .liquid-glass-card {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02), inset 0 1px 0 0 #FFFFFF;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 1px 2px 0 rgba(15, 23, 42, 0.02);
 }
 
 .liquid-glass-highlight {
-  background: linear-gradient(135deg, rgba(235, 243, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(0, 102, 255, 0.22);
-  box-shadow: 0 12px 35px -5px rgba(0, 102, 255, 0.12), inset 0 1px 1px 0 #FFFFFF;
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 102, 255, 0.20);
+  box-shadow: 0 2px 8px -2px rgba(0, 102, 255, 0.08);
 }
 
 .liquid-glass-input {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .liquid-glass-input:focus {
   background: #FFFFFF;
   border-color: #0066FF;
-  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.12);
   outline: none;
 }
 
 .liquid-button {
   position: relative;
   overflow: hidden;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .liquid-button:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
-/* Ambient Athletic Glow Orbs (Subtle soft athletic blue & sky on white) */
+/* Subtle Ambient Athletic Glow Orbs */
 .ambient-glow-blue {
   position: absolute;
-  width: 480px;
-  height: 480px;
-  background: radial-gradient(circle, rgba(0, 102, 255, 0.10) 0%, rgba(0, 102, 255, 0) 70%);
-  filter: blur(70px);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.06) 0%, rgba(0, 102, 255, 0) 70%);
+  filter: blur(60px);
   pointer-events: none;
   z-index: 0;
 }
 
 .ambient-glow-sky {
   position: absolute;
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(2, 132, 199, 0.08) 0%, rgba(2, 132, 199, 0) 70%);
-  filter: blur(65px);
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.05) 0%, rgba(2, 132, 199, 0) 70%);
+  filter: blur(55px);
   pointer-events: none;
   z-index: 0;
 }
 
 .ambient-glow-soft {
   position: absolute;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.07) 0%, rgba(59, 130, 246, 0) 70%);
-  filter: blur(60px);
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.04) 0%, rgba(59, 130, 246, 0) 70%);
+  filter: blur(50px);
   pointer-events: none;
   z-index: 0;
 }
